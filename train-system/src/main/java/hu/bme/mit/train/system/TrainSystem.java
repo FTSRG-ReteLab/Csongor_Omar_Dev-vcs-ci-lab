@@ -1,5 +1,6 @@
 package hu.bme.mit.train.system;
 
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import hu.bme.mit.train.controller.TrainControllerImpl;
 import hu.bme.mit.train.interfaces.TrainController;
@@ -16,7 +17,7 @@ public class TrainSystem {
 	private TrainSensor sensor = new TrainSensorImpl(controller);
 	private TrainUser user = new TrainUserImpl(controller);
 
-	private Table<Date, Integer, Integer> tachograph;
+	private Table<Long, Integer, Integer> tachograph;
 
 	public TrainController getController() {
 		return controller;
@@ -28,6 +29,17 @@ public class TrainSystem {
 
 	public TrainUser getUser() {
 		return user;
+	}
+
+	public void updateTable(int joystickPosition, int referenceSpeed) {
+		if (tachograph == null) {
+			tachograph = HashBasedTable.create();
+		}
+		tachograph.put(new Date().getTime(), joystickPosition, referenceSpeed);
+	}
+
+	public Table<Long, Integer, Integer> getTachograph() {
+		return tachograph;
 	}
 
 }
